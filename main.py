@@ -11,8 +11,6 @@ class PerformerSelector:
     A class for selecting performers from specified root directories.
     """
 
-    PROMPT_STRING = "Performer: "
-
     def __init__(
         self, performers_root_directories: List[str], return_full_path: bool = True
     ):
@@ -27,6 +25,7 @@ class PerformerSelector:
         self.return_full_path = return_full_path
         self.allowed_characters = set(string.ascii_letters + string.digits + " .()_[]-")
         self.performer_length_limit = 100
+        self.prompt_string = "Performer: "
 
     def _is_valid_performer_name(self, name: str) -> bool:
         """
@@ -68,12 +67,13 @@ class PerformerSelector:
                     f"The provided path '{root_path}' is not a valid directory."
                 )
 
-            subfolders = [
-                name
-                for name in os.listdir(root_path)
-                if os.path.isdir(os.path.join(root_path, name))
-                and not self._is_junction(os.path.join(root_path, name))
-            ]
+            subfolders = []
+            for name in os.listdir(root_path):
+                subfolder_path = os.path.join(root_path, name)
+                if os.path.isdir(subfolder_path) and not self._is_junction(
+                    subfolder_path
+                ):
+                    subfolders.append(name)
             return subfolders
         except PermissionError:
             print(f"Permission error accessing '{root_path}'")
@@ -129,7 +129,7 @@ class PerformerSelector:
         while True:
             try:
                 user_input = prompt(
-                    self.PROMPT_STRING,
+                    self.prompt_string,
                     completer=FuzzyWordCompleter(performers_dict.keys()),
                     complete_while_typing=True,
                 ).strip()
@@ -157,7 +157,7 @@ class PerformerSelector:
 
 
 def main():
-    performers_root_directories = []
+    performers_root_directories = []  # Add your root directories here
     performer_selector = PerformerSelector(
         performers_root_directories, return_full_path=True
     )
