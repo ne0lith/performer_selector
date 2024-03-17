@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="performer_selector",
-    version="0.2",
+    version="0.3",
     description="A Python module for selecting performers from specified root directories.",
     author="ne0lith",
     author_email="ne0lith@proton.me",

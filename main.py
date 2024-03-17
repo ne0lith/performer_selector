@@ -23,6 +23,31 @@ class PerformerSelector:
         """
         self.performers_root_directories = performers_root_directories
         self.return_full_path = return_full_path
+        self._validate_directories()
+        self._initialize_constants()
+
+    def _validate_directories(self) -> None:
+        """
+        Validate the provided directories.
+
+        Raises:
+            ValueError: If no root directories are provided or if any provided path is not a valid directory.
+        """
+        if not self.performers_root_directories:
+            raise ValueError("Please provide at least one root directory.")
+
+        invalid_paths = [
+            path for path in self.performers_root_directories if not os.path.isdir(path)
+        ]
+        if invalid_paths:
+            raise ValueError(
+                f"The following paths are not valid directories: {invalid_paths}"
+            )
+
+    def _initialize_constants(self) -> None:
+        """
+        Initialize constants used by the PerformerSelector instance.
+        """
         self.allowed_characters = set(string.ascii_letters + string.digits + " .()_[]-")
         self.performer_length_limit = 100
         self.prompt_string = "Performer: "
